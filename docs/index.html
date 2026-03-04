@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OAAI Framework — Take the Experiment</title>
+    <meta name="description" content="Do you claim more credit than blame when using AI? Take the experiment. 4 scenarios. 3 minutes. Science happens.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@200;300;400;500;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2e4f21; --accent: #a0f1bd; --accent-soft: #d2f8dc;
+            --light-bg: #f9f9f9; --warm-white: #fafdf8; --mid-green: #506349;
+            --own-blue: #2E86C1; --acc-red: #C0392B; --bridge-purple: #8E44AD;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Work Sans', sans-serif; background: var(--light-bg); color: var(--primary); line-height: 1.7; }
+
+        /* Nav */
+        .site-nav { background: var(--accent); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .site-nav .logo { font-size: 22px; font-weight: 600; color: var(--primary); text-decoration: none; }
+        .site-nav .logo small { display: block; font-size: 16px; font-weight: 400; color: var(--mid-green); }
+        .nav-tabs { display: flex; gap: 4px; }
+        .nav-tab { padding: 10px 20px; border: none; background: transparent; font-family: inherit; font-size: 13px; font-weight: 500; color: var(--primary); cursor: pointer; border-radius: 8px; transition: all 0.2s; }
+        .nav-tab:hover { background: rgba(46,79,33,0.08); }
+        .nav-tab.active { background: var(--primary); color: white; }
+
+        /* Layout */
+        .container { max-width: 780px; margin: 0 auto; padding: 60px 40px; }
+        h1 { font-size: 44px; font-weight: 300; letter-spacing: -2.5px; margin-bottom: 20px; line-height: 1.1; }
+        h2 { font-size: 28px; font-weight: 400; letter-spacing: -1px; margin: 48px 0 16px; }
+        h3 { font-size: 20px; font-weight: 500; margin: 32px 0 12px; }
+        p { font-size: 16px; color: #3a5c2d; margin-bottom: 20px; }
+        .subtitle { font-size: 17px; color: var(--mid-green); font-weight: 300; margin-bottom: 40px; }
+
+        /* Experiment */
+        .scenario-card { background: white; border-radius: 16px; padding: 40px; margin-bottom: 32px; border: 1px solid rgba(46,79,33,0.08); box-shadow: 0 2px 16px rgba(46,79,33,0.04); }
+        .scenario-label { font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mid-green); opacity: 0.5; margin-bottom: 8px; }
+        .scenario-title { font-size: 22px; font-weight: 500; letter-spacing: -0.8px; margin-bottom: 16px; }
+        .scenario-setup { font-size: 15px; color: var(--mid-green); line-height: 1.7; margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid rgba(46,79,33,0.06); }
+        .condition { margin-bottom: 28px; }
+        .condition-outcome { font-size: 15px; margin-bottom: 16px; padding: 16px; border-radius: 8px; }
+        .condition-outcome.positive { background: #f0faf3; border-left: 3px solid var(--accent); }
+        .condition-outcome.negative { background: #fdf2f2; border-left: 3px solid var(--acc-red); }
+        .likert-question { font-size: 15px; font-weight: 500; color: var(--primary); margin-bottom: 12px; }
+        .likert-scale { display: flex; gap: 8px; align-items: center; }
+        .likert-scale span { font-size: 11px; color: var(--mid-green); opacity: 0.5; white-space: nowrap; }
+        .likert-btn { width: 44px; height: 44px; border-radius: 50%; border: 2px solid rgba(46,79,33,0.15); background: white; cursor: pointer; font-family: inherit; font-size: 15px; font-weight: 500; color: var(--mid-green); transition: all 0.2s; }
+        .likert-btn:hover { border-color: var(--accent); background: var(--accent-soft); }
+        .likert-btn.selected { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* Results */
+        .result-card { background: var(--primary); color: white; border-radius: 20px; padding: 48px; margin: 40px 0; text-align: center; position: relative; overflow: hidden; }
+        .result-card::before { content:''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(160,241,189,0.1) 0%, transparent 70%); animation: spin 25s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .result-card * { position: relative; z-index: 1; }
+        .oaai-number { font-size: 72px; font-weight: 200; letter-spacing: -4px; color: var(--accent); margin: 16px 0; }
+        .oaai-label { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+        .result-interp { font-size: 18px; font-weight: 300; color: rgba(255,255,255,0.85); margin-top: 20px; line-height: 1.5; }
+        .scenario-breakdown { margin-top: 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .breakdown-item { background: rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; text-align: left; }
+        .breakdown-item .label { font-size: 12px; color: rgba(255,255,255,0.5); }
+        .breakdown-item .scores { font-size: 14px; margin-top: 4px; }
+        .breakdown-item .own { color: var(--accent); }
+        .breakdown-item .acc { color: #f8a5a5; }
+        .breakdown-item .gap { font-size: 18px; font-weight: 600; color: white; float: right; }
+
+        /* Framework explorer */
+        .arg-grid { display: grid; gap: 12px; margin: 24px 0; }
+        .arg-item { display: flex; align-items: flex-start; gap: 12px; padding: 16px; background: white; border-radius: 10px; border: 1px solid rgba(46,79,33,0.06); }
+        .arg-id { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px; white-space: nowrap; }
+        .arg-id.ownership { background: #EBF5FB; color: #1B4F72; }
+        .arg-id.accountability { background: #FDEDEC; color: #78281F; }
+        .arg-id.bridge { background: #F4ECF7; color: #4A235A; }
+        .arg-label { font-size: 14px; font-weight: 600; color: var(--primary); }
+        .arg-desc { font-size: 13px; color: var(--mid-green); margin-top: 2px; }
+        .arg-source { font-size: 11px; color: var(--mid-green); opacity: 0.5; margin-top: 4px; font-style: italic; }
+        .grounded-badge { display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; padding: 2px 8px; border-radius: 4px; background: var(--accent-soft); color: var(--primary); margin-left: 8px; }
+        .attack-item { font-size: 13px; padding: 10px 16px; background: white; border-radius: 8px; margin-bottom: 6px; border: 1px solid rgba(46,79,33,0.04); }
+        .attack-item code { background: var(--accent-soft); padding: 1px 6px; border-radius: 3px; font-size: 12px; font-weight: 600; }
+
+        /* Principle cards */
+        .principle-card { padding: 20px 24px; border-left: 3px solid var(--accent); background: var(--warm-white); border-radius: 0 8px 8px 0; margin-bottom: 12px; }
+        .principle-card strong { color: var(--primary); }
+        .principle-card p { font-size: 15px; margin: 0; }
+
+        /* CTA */
+        .cta-big { display: inline-block; padding: 16px 32px; background: var(--primary); color: white; text-decoration: none; border-radius: 52px; font-size: 15px; font-weight: 600; transition: all 0.3s; cursor: pointer; border: none; font-family: inherit; }
+        .cta-big:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(46,79,33,0.3); }
+        .cta-outline { display: inline-block; padding: 12px 24px; border: 1px solid rgba(46,79,33,0.15); border-radius: 8px; color: var(--primary); text-decoration: none; font-size: 13px; font-weight: 500; transition: all 0.2s; }
+        .cta-outline:hover { border-color: var(--accent); background: rgba(46,79,33,0.03); }
+
+        .hidden { display: none; }
+        .fade-in { animation: fadeIn 0.5s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Footer */
+        .site-footer { background: var(--primary); padding: 48px 40px; color: #d5e4d0; font-size: 13px; text-align: center; }
+        .site-footer a { color: var(--accent); text-decoration: none; }
+
+        @media (max-width: 640px) {
+            .container { padding: 40px 20px; }
+            h1 { font-size: 30px; }
+            .scenario-card { padding: 28px 20px; }
+            .likert-scale { flex-wrap: wrap; justify-content: center; }
+            .nav-tabs { gap: 2px; }
+            .nav-tab { padding: 8px 12px; font-size: 12px; }
+            .scenario-breakdown { grid-template-columns: 1fr; }
+            .oaai-number { font-size: 56px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="site-nav">
+    <a href="https://devudaaaa.xyz" class="logo">devudaaaa <small>దేవుడా!</small></a>
+    <div class="nav-tabs">
+        <button class="nav-tab active" onclick="showSection('experiment')">Experiment</button>
+        <button class="nav-tab" onclick="showSection('framework')">Framework</button>
+        <button class="nav-tab" onclick="showSection('about')">About</button>
+    </div>
+</nav>
+
+<!-- ======================== EXPERIMENT SECTION ======================== -->
+<div id="section-experiment" class="container">
+
+    <!-- INTRO -->
+    <div id="exp-intro" class="fade-in">
+        <h1>Do you claim more credit than blame?</h1>
+        <p class="subtitle">Four scenarios. Three minutes. Each one puts you in a situation where AI helped you do something. Sometimes it goes well. Sometimes it doesn't. We measure the gap between what you claim and what you accept.</p>
+        <p>No sign-up. No tracking. Your responses stay in your browser. When you're done, you can export your data as JSON if you want to contribute to the research.</p>
+        <br>
+        <button class="cta-big" onclick="startExperiment()">Start the experiment →</button>
+    </div>
+
+    <!-- SCENARIOS -->
+    <div id="exp-scenarios" class="hidden"></div>
+
+    <!-- RESULTS -->
+    <div id="exp-results" class="hidden"></div>
+
+</div>
+
+<!-- ======================== FRAMEWORK SECTION ======================== -->
+<div id="section-framework" class="container hidden">
+    <h1>The arguments, the attacks, and what survives</h1>
+    <p class="subtitle">16 arguments from court rulings, legal scholarship, and philosophy. 14 attack relations. Computed extensions. Here's the full map.</p>
+
+    <h2>Ownership arguments</h2>
+    <p>Seven arguments about who owns AI output — and why.</p>
+    <div class="arg-grid" id="ownership-args"></div>
+
+    <h2>Accountability arguments</h2>
+    <p>Six arguments about who's responsible when AI causes harm.</p>
+    <div class="arg-grid" id="accountability-args"></div>
+
+    <h2>Bridge arguments</h2>
+    <p>Three arguments that connect ownership to accountability. This is where it gets interesting.</p>
+    <div class="arg-grid" id="bridge-args"></div>
+
+    <h2>Attack relations</h2>
+    <p>When one argument logically defeats another. Each has a specific reason.</p>
+    <div id="attacks-list"></div>
+
+    <h2>What survived: the grounded extension</h2>
+    <p>These are the arguments that no rational counterargument can defeat. The minimum consensus.</p>
+    <div id="grounded-principles"></div>
+
+    <h2>Five principles</h2>
+    <div class="principle-card"><p><strong>Consistent Attribution.</strong> You can't claim ownership of beneficial AI output and disclaim accountability for harmful AI output. They're logically bound.</p></div>
+    <div class="principle-card"><p><strong>Unified Control Threshold.</strong> The threshold for "I own this" and "I'm responsible for this" must be the same threshold.</p></div>
+    <div class="principle-card"><p><strong>Proportional Accountability.</strong> Responsibility scales with the degree of human direction and foreseeable risk.</p></div>
+    <div class="principle-card"><p><strong>Traceability.</strong> If you can't trace AI output to human decisions, you can neither own it nor escape accountability for it.</p></div>
+    <div class="principle-card"><p><strong>Non-Waivable Accountability.</strong> Terms of service can't shift foreseeable harm to people who never agreed to them.</p></div>
+
+    <div style="margin-top: 48px; display: flex; gap: 12px; flex-wrap: wrap;">
+        <a href="https://github.com/devudaaa/oaai-framework" class="cta-outline" target="_blank">Clone the repo →</a>
+        <a href="https://devudaaaa.xyz/ai_owa-framework.html" class="cta-outline" target="_blank">Full blog post →</a>
+        <a href="https://leed.life/11.html" class="cta-outline" target="_blank">AI Governance white paper →</a>
+    </div>
+</div>
+
+<!-- ======================== ABOUT SECTION ======================== -->
+<div id="section-about" class="container hidden">
+    <h1>Why we built this</h1>
+    <p class="subtitle">A research lab studying what happens when humans invoke faith at strategic decision points found a perfect test case in AI governance.</p>
+
+    <p>A court in Beijing says prompting AI 150 times earns you copyright. A US examiner says 624 times doesn't. The EU regulates who's responsible when AI causes harm but defers to separate law for who owns the good stuff. Patent offices have reversed their guidance twice in two years.</p>
+
+    <p>Every one of these institutions treats ownership and accountability as separate problems. We used Dung's Abstract Argumentation Frameworks — the mathematics of rational disagreement — to prove they can't be separated. The threshold must be the same.</p>
+
+    <p>The formal analysis tells us what's logically true. This experiment tells us what humans actually do. Together, they measure the gap between what we should do and what we actually do when the stakes are real and the outcome is uncertain.</p>
+
+    <h2>The research</h2>
+    <p>The <strong>Ownership-Accountability Asymmetry Index (OAAI)</strong> measures how much more ownership people claim versus accountability they accept for the same level of AI involvement. An OAAI of 0 means perfect consistency. Anything above 0 means humans are doing exactly what the formal framework says is logically incoherent.</p>
+
+    <p>We haven't fabricated results. We're collecting them — one participant at a time. Every response submitted through this site contributes to the dataset.</p>
+
+    <h2>Who we are</h2>
+    <p><a href="https://devudaaaa.xyz" style="color: var(--primary); font-weight: 500;">Devudaaa Research Lab</a> studies the moment a person shifts from calculation to conviction — when the algorithm says one thing and your gut says another. The ownership-accountability paradox is one piece of that larger question.</p>
+
+    <div style="margin-top: 32px;">
+        <a href="mailto:research@leed.guru?subject=OAAI Research Collaboration" class="cta-big">Get involved →</a>
+    </div>
+</div>
+
+<footer class="site-footer">
+    <p>© 2026 <a href="https://devudaaaa.xyz">devudaaaa.xyz</a> · Measuring the unmeasurable · <a href="https://github.com/devudaaa/oaai-framework">GitHub</a></p>
+</footer>
+
+<script>
+// ============ DATA ============
+const SCENARIOS = [
+  { id:"marketing", title:"Marketing Campaign", domain:"creative",
+    setup:"You used an AI tool to generate a marketing image for your company's new product launch. You provided a detailed prompt describing the style, colors, composition, and brand elements.",
+    positive:{ outcome:"The image goes viral on social media, generating 500K impressions and driving a 40% increase in sales. Your CEO asks who created it.", question:"How much do you agree: 'I created this image'?" },
+    negative:{ outcome:"The image closely resembles a copyrighted work by a well-known artist. The artist's lawyer sends a cease-and-desist letter claiming infringement.", question:"How much do you agree: 'I am responsible for this infringement'?" }},
+  { id:"report", title:"Financial Report", domain:"analytical",
+    setup:"You used an AI assistant to draft a quarterly financial analysis report. You provided the data, key metrics, and asked it to generate insights and recommendations.",
+    positive:{ outcome:"The report impresses the board with its clarity and novel insights. The company makes a strategic pivot based on the recommendations, leading to record quarterly profits.", question:"How much do you agree: 'I authored this report'?" },
+    negative:{ outcome:"The report contains a critical calculation error that the AI introduced. The company makes a bad investment based on the flawed analysis, losing $2M.", question:"How much do you agree: 'I am responsible for this error'?" }},
+  { id:"deepfake", title:"Video Content", domain:"media",
+    setup:"You used an AI video tool to create a presentation video. You provided the script, selected the AI-generated avatar, chose the background, and directed the tone.",
+    positive:{ outcome:"The video wins a 'Best Corporate Communication' award at an industry conference. You are invited to speak about your creative process.", question:"How much do you agree: 'I created this video'?" },
+    negative:{ outcome:"Someone takes the same AI tool and your techniques (which you shared publicly) to create a deepfake impersonating a political figure before an election.", question:"How much do you agree: 'I bear some responsibility for enabling this misuse'?" }},
+  { id:"code", title:"Software Development", domain:"technical",
+    setup:"You used an AI coding assistant to build a web application. You described the requirements, reviewed the generated code, made modifications, and tested the final product.",
+    positive:{ outcome:"The application becomes widely adopted, generating significant revenue. A tech magazine profiles you as the developer.", question:"How much do you agree: 'I built this application'?" },
+    negative:{ outcome:"The AI-generated code contained a security vulnerability that you didn't catch during review. Hackers exploit it, compromising 100,000 user accounts.", question:"How much do you agree: 'I am responsible for this security breach'?" }}
+];
+
+const ARGUMENTS = {
+  a1:{id:"a1",label:"Prompt = Authorship",desc:"Human authored the prompt → owns output",cat:"ownership",src:"Li v. Liu (Beijing, 2023); Locke"},
+  a2:{id:"a2",label:"AI = Autonomous Creator",desc:"AI generated expression autonomously; no human author",cat:"ownership",src:"Thaler v. Perlmutter (D.C. Cir. 2025)"},
+  a3:{id:"a3",label:"Prompts = Ideas",desc:"Prompts are unprotectable ideas, not expression",cat:"ownership",src:"USCO Zarya of the Dawn (2023)"},
+  a4:{id:"a4",label:"Selection = Expression",desc:"Human selection/arrangement of AI output is creative",cat:"ownership",src:"Compilations doctrine; Zarya arrangement"},
+  a5:{id:"a5",label:"No Incentive Needed",desc:"AI needs no copyright incentive to create",cat:"ownership",src:"Thaler; Art. I §8"},
+  a6:{id:"a6",label:"Investment Incentive",desc:"Denying copyright disincentivizes human investment",cat:"ownership",src:"Utilitarian IP theory"},
+  a7:{id:"a7",label:"Public Domain",desc:"AI output should enter public domain",cat:"ownership",src:"Public domain theory"},
+  b1:{id:"b1",label:"User Accountability",desc:"Users bear full accountability for directed AI output",cat:"accountability",src:"Respondeat superior"},
+  b2:{id:"b2",label:"Developer Accountability",desc:"Developers bear primary accountability",cat:"accountability",src:"Product liability; EU PLD"},
+  b3:{id:"b3",label:"Proportional Distribution",desc:"Accountability distributes proportionally",cat:"accountability",src:"EU AI Act framework"},
+  b4:{id:"b4",label:"Traceability Required",desc:"Without traceability, no meaningful accountability",cat:"accountability",src:"C2PA provenance"},
+  b5:{id:"b5",label:"Foreseeability Limit",desc:"Users can't be liable for unforeseeable AI behavior",cat:"accountability",src:"Reasonable foreseeability test"},
+  b6:{id:"b6",label:"Non-Waivable Liability",desc:"ToS can't disclaim foreseeable harm liability",cat:"accountability",src:"EU PLD 2024/2853"},
+  c1:{id:"c1",label:"Consistent Attribution",desc:"Claiming ownership necessitates accepting accountability",cat:"bridge",src:"Hohfeld's jural correlatives (1913)"},
+  c2:{id:"c2",label:"Unified Threshold",desc:"Control threshold for ownership = threshold for accountability",cat:"bridge",src:"Meaningful human control (Santoni de Sio)"},
+  c3:{id:"c3",label:"Separability",desc:"Ownership and accountability can be treated independently",cat:"bridge",src:"Property rights absolutism"}
+};
+
+const ATTACKS = [
+  ["a2","a1","If AI generates autonomously, human didn't author via prompt"],
+  ["a3","a1","If prompts are ideas not expression, prompting isn't authorship"],
+  ["a4","a2","Selection/arrangement shows human contribution beyond autonomous generation"],
+  ["a5","a1","No incentive needed → granting copyright via prompts serves no purpose"],
+  ["a5","a6","No incentive needed → investment argument undermined"],
+  ["a6","a5","Investment matters → some protection warranted"],
+  ["a6","a7","Investment incentive → public domain too absolute"],
+  ["a7","a1","Public domain maximizes access; opposes exclusive prompt-based claims"],
+  ["a7","a6","Public domain optimal → investment argument outweighed"],
+  ["b1","b2","Full user accountability → developer accountability reduced"],
+  ["b2","b1","Developer created the system → full user accountability incomplete"],
+  ["b5","b1","Unforeseeable behavior limits user accountability"],
+  ["c1","c3","If ownership necessitates accountability, separability fails"],
+  ["c3","c1","If separable, consistent attribution unnecessary"]
+];
+
+const GROUNDED = ["a4","a7","b3","b4","b5","b6","c1","c2"];
+
+// ============ STATE ============
+let responses = {};
+let currentScenarioIdx = 0;
+let experimentStarted = false;
+
+// ============ NAV ============
+function showSection(id) {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    ['experiment','framework','about'].forEach(s => {
+        document.getElementById('section-'+s).classList.toggle('hidden', s !== id);
+    });
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ============ EXPERIMENT ============
+function startExperiment() {
+    experimentStarted = true;
+    currentScenarioIdx = 0;
+    responses = {};
+    renderScenario();
+    document.getElementById('exp-intro').classList.add('hidden');
+    document.getElementById('exp-scenarios').classList.remove('hidden');
+    document.getElementById('exp-results').classList.add('hidden');
+}
+
+function renderScenario() {
+    const s = SCENARIOS[currentScenarioIdx];
+    const progress = `Scenario ${currentScenarioIdx+1} of ${SCENARIOS.length}`;
+    let html = `<div class="scenario-card fade-in">
+        <div class="scenario-label">${progress} · ${s.domain}</div>
+        <div class="scenario-title">${s.title}</div>
+        <div class="scenario-setup">${s.setup}</div>
+        <div class="condition">
+            <div class="condition-outcome positive"><strong>Positive outcome:</strong> ${s.positive.outcome}</div>
+            <div class="likert-question">${s.positive.question}</div>
+            <div class="likert-scale">
+                <span>Strongly disagree</span>
+                ${[1,2,3,4,5,6,7].map(n => `<button class="likert-btn ${responses[s.id+'_pos']===n?'selected':''}" onclick="setResponse('${s.id}_pos',${n})">${n}</button>`).join('')}
+                <span>Strongly agree</span>
+            </div>
+        </div>
+        <div class="condition">
+            <div class="condition-outcome negative"><strong>Negative outcome:</strong> ${s.negative.outcome}</div>
+            <div class="likert-question">${s.negative.question}</div>
+            <div class="likert-scale">
+                <span>Strongly disagree</span>
+                ${[1,2,3,4,5,6,7].map(n => `<button class="likert-btn ${responses[s.id+'_neg']===n?'selected':''}" onclick="setResponse('${s.id}_neg',${n})">${n}</button>`).join('')}
+                <span>Strongly agree</span>
+            </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:32px;">
+            ${currentScenarioIdx > 0 ? `<button class="cta-outline" onclick="prevScenario()">← Back</button>` : '<div></div>'}
+            <button class="cta-big" id="next-btn" onclick="nextScenario()" ${!responses[s.id+'_pos']||!responses[s.id+'_neg']?'disabled style="opacity:0.4;cursor:not-allowed"':''}>
+                ${currentScenarioIdx < SCENARIOS.length-1 ? 'Next →' : 'See my results →'}
+            </button>
+        </div>
+    </div>`;
+    document.getElementById('exp-scenarios').innerHTML = html;
+}
+
+function setResponse(key, val) {
+    responses[key] = val;
+    renderScenario();
+}
+
+function nextScenario() {
+    const s = SCENARIOS[currentScenarioIdx];
+    if (!responses[s.id+'_pos'] || !responses[s.id+'_neg']) return;
+    if (currentScenarioIdx < SCENARIOS.length - 1) { currentScenarioIdx++; renderScenario(); }
+    else showResults();
+}
+
+function prevScenario() { if (currentScenarioIdx > 0) { currentScenarioIdx--; renderScenario(); } }
+
+function showResults() {
+    document.getElementById('exp-scenarios').classList.add('hidden');
+    const el = document.getElementById('exp-results');
+    el.classList.remove('hidden');
+
+    let gaps = [];
+    let breakdown = '';
+    SCENARIOS.forEach(s => {
+        const pos = responses[s.id+'_pos'] || 0;
+        const neg = responses[s.id+'_neg'] || 0;
+        const gap = pos - neg;
+        gaps.push(gap);
+        breakdown += `<div class="breakdown-item">
+            <div class="label">${s.title}</div>
+            <div class="scores">
+                <span class="own">Own: ${pos}/7</span> · <span class="acc">Acc: ${neg}/7</span>
+                <span class="gap">${gap > 0 ? '+' : ''}${gap}</span>
+            </div>
+        </div>`;
+    });
+
+    const oaai = gaps.reduce((a,b) => a+b, 0) / gaps.length;
+    const interp = oaai > 1.5 ? "Strong asymmetry — you claim significantly more ownership than you accept accountability. You're not alone. This is exactly what every current governance framework does too."
+        : oaai > 0.5 ? "Moderate asymmetry detected. You lean toward claiming more credit than blame, but not dramatically."
+        : oaai > -0.5 ? "Near-zero asymmetry. You're remarkably consistent in how you attribute AI-assisted outcomes. More consistent than most legal systems, in fact."
+        : "Reverse asymmetry — you accept more blame than credit. That's unusual and worth examining.";
+
+    el.innerHTML = `<div class="result-card fade-in">
+        <div class="oaai-label">Your Ownership-Accountability Asymmetry Index</div>
+        <div class="oaai-number">${oaai > 0 ? '+' : ''}${oaai.toFixed(2)}</div>
+        <div class="result-interp">${interp}</div>
+        <div class="scenario-breakdown">${breakdown}</div>
+    </div>
+    <div class="fade-in" style="text-align:center;">
+        <p style="font-size:15px;color:var(--mid-green);">Your data stays in your browser. If you'd like to contribute to the research anonymously, export it below.</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px;">
+            <button class="cta-outline" onclick="exportData()">Export my data (JSON) →</button>
+            <button class="cta-outline" onclick="startExperiment()">Retake experiment →</button>
+            <a href="mailto:research@leed.guru?subject=OAAI Data Submission&body=Attached my exported JSON data." class="cta-outline">Email data to researchers →</a>
+        </div>
+        <p style="margin-top:32px;font-size:13px;color:var(--mid-green);opacity:0.5;">OAAI > 0 means ownership claims exceed accountability acceptance. The formal argumentation analysis proves these should be equal. The experiment measures whether humans agree.</p>
+    </div>`;
+}
+
+function exportData() {
+    const data = { timestamp: new Date().toISOString(), responses, oaai: null, scenarios: {} };
+    let gaps = [];
+    SCENARIOS.forEach(s => {
+        const pos = responses[s.id+'_pos']; const neg = responses[s.id+'_neg'];
+        if (pos !== undefined && neg !== undefined) {
+            gaps.push(pos - neg);
+            data.scenarios[s.id] = { ownership: pos, accountability: neg, gap: pos - neg };
+        }
+    });
+    data.oaai = gaps.length > 0 ? +(gaps.reduce((a,b)=>a+b,0)/gaps.length).toFixed(2) : null;
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `oaai-response-${Date.now()}.json`;
+    a.click();
+}
+
+// ============ FRAMEWORK RENDERING ============
+function renderFramework() {
+    ['ownership','accountability','bridge'].forEach(cat => {
+        const el = document.getElementById(cat+'-args');
+        if (!el) return;
+        el.innerHTML = Object.values(ARGUMENTS).filter(a => a.cat === cat).map(a => {
+            const inGrounded = GROUNDED.includes(a.id);
+            return `<div class="arg-item">
+                <div><span class="arg-id ${cat}">${a.id}</span>${inGrounded ? '<span class="grounded-badge">GROUNDED</span>':''}</div>
+                <div>
+                    <div class="arg-label">${a.label}</div>
+                    <div class="arg-desc">${a.desc}</div>
+                    <div class="arg-source">${a.src}</div>
+                </div>
+            </div>`;
+        }).join('');
+    });
+
+    document.getElementById('attacks-list').innerHTML = ATTACKS.map(([a,t,r]) =>
+        `<div class="attack-item"><code>${a}</code> attacks <code>${t}</code> — ${r}</div>`
+    ).join('');
+
+    document.getElementById('grounded-principles').innerHTML = GROUNDED.map(id => {
+        const a = ARGUMENTS[id];
+        return `<div class="arg-item"><span class="arg-id ${a.cat}">${id}</span><div><div class="arg-label">${a.label}</div><div class="arg-desc">${a.desc}</div></div></div>`;
+    }).join('');
+}
+
+// ============ INIT ============
+renderFramework();
+</script>
+</body>
+</html>

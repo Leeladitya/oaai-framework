@@ -1,0 +1,26 @@
+{
+  "name": "devudaaa-oaai-framework",
+  "version": "0.1.0",
+  "description": "Ownership-Accountability Asymmetry Index — Integrated validation pipeline for AI governance policy built on Dung's AAF. Integrates with Claw governance pipeline and ASPARTIX argumentation solver.",
+  "keywords": ["ai-governance", "argumentation-frameworks", "dung-aaf", "aspartix", "claw", "agora", "deepfakes", "policy"],
+  "author": "Devudaaa Research Lab",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/devudaaa/oaai-framework" },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "solve:asp": "bash asp/run-solver.sh",
+    "solve:asp:preferred": "bash asp/run-solver.sh preferred",
+    "validate:cases": "node tests/run-stress-test.js"
+  },
+  "browserslist": {
+    "production": [">0.2%", "not dead", "not op_mini all"],
+    "development": ["last 1 chrome version"]
+  }
+}
